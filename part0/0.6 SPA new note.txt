@@ -1,0 +1,16 @@
+title SPA- new note submission
+
+note over browser:
+New note submitted;
+JS event handler executed to
+create new note, add to notes list,
+rerender notes list, 
+send notes list to server as JSON
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server->browser: HTTP status code 201- resource created
+
+note over server:
+No redirect or HTTP requests initiated
+end note
