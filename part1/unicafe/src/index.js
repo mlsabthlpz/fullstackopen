@@ -11,7 +11,11 @@ const Button = ({handleClick, sent}) => {
     )
 }
 
-//const Count = ({sent}) => <p>{sent.name} {sent.count}</p>
+const Statistic = ({name, value}) => {
+    return (
+        <p>{name} {value}</p>
+    )
+}
 
 const Statistics = ({data}) => {
     const alldata = data.all.val
@@ -19,17 +23,17 @@ const Statistics = ({data}) => {
     if (totalcount === 0) {
         return (<p>Cannot calculate stats until feedback has been given. :(</p>)
     }
-                
+              
     const avg = alldata.reduce((a,b) => a + b)/totalcount
-    const percentpos = (data.good.count)/totalcount*100
+    const percentpos = ((data.good.count)/totalcount*100)
     return(
       <div>
-        <p>{data.good.name} {data.good.count}</p>
-        <p>{data.neutral.name} {data.neutral.count}</p>
-        <p>{data.bad.name} {data.bad.count}</p>
-        <p>All {totalcount}</p>
-        <p>Average {(avg)}</p>
-        <p>Positive {(percentpos)}%</p>
+        <Statistic name={data.good.name} value={data.good.count} />
+        <Statistic name={data.neutral.name} value={data.neutral.count} />
+        <Statistic name={data.bad.name} value={data.bad.count} />
+        <Statistic name="All" value={totalcount} />
+        <Statistic name="Average" value={avg} />
+        <Statistic name="Positive" value={percentpos+"%"} />
       </div>
     )
 }
