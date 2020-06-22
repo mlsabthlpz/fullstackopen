@@ -13,7 +13,10 @@ const Button = ({handleClick, sent}) => {
 
 const Statistic = ({name, value}) => {
     return (
-        <p>{name} {value}</p>
+        <tr>
+         <td>{name}</td>
+         <td>{value}</td>
+        </tr>
     )
 }
 
@@ -27,14 +30,16 @@ const Statistics = ({data}) => {
     const avg = alldata.reduce((a,b) => a + b)/totalcount
     const percentpos = ((data.good.count)/totalcount*100)
     return(
-      <div>
-        <Statistic name={data.good.name} value={data.good.count} />
-        <Statistic name={data.neutral.name} value={data.neutral.count} />
-        <Statistic name={data.bad.name} value={data.bad.count} />
-        <Statistic name="All" value={totalcount} />
-        <Statistic name="Average" value={avg} />
-        <Statistic name="Positive" value={percentpos+"%"} />
-      </div>
+      <table>
+        <tbody>
+          <Statistic name={data.good.name} value={data.good.count} />
+          <Statistic name={data.neutral.name} value={data.neutral.count} />
+          <Statistic name={data.bad.name} value={data.bad.count} />
+          <Statistic name="All" value={totalcount} />
+          <Statistic name="Average" value={avg} />
+          <Statistic name="Positive" value={percentpos+"%"} />
+        </tbody>
+      </table>
     )
 }
 
@@ -76,7 +81,6 @@ const App = () => {
   const addOne = (label, setLabel, value) => () => {
       setLabel(label + 1)
       setAll(allSents.concat(value))
-      console.log(allSents)
   }
 
   return (
