@@ -11,19 +11,23 @@ const Button = ({handleClick, sent}) => {
     )
 }
 
-const Count = ({sent}) => <p>{sent.name} {sent.count}</p>
+//const Count = ({sent}) => <p>{sent.name} {sent.count}</p>
 
-const Stats = ({data}) => {
-    if (data.length === 0) {
-        return (<p>Cannot calculate stats until ratings have been submitted.</p>)
+const Statistics = ({data}) => {
+    const alldata = data.all.val
+    const totalcount = data.all.count
+    if (totalcount === 0) {
+        return (<p>Cannot calculate stats until feedback has been given. :(</p>)
     }
                 
-    const total = data.length
-    const avg = data.reduce((a,b) => a + b)/total
-    const percentpos = (data.filter(x => x===1).length)/total*100
+    const avg = alldata.reduce((a,b) => a + b)/totalcount
+    const percentpos = (data.good.count)/totalcount*100
     return(
       <div>
-        <p>All {total}</p>
+        <p>{data.good.name} {data.good.count}</p>
+        <p>{data.neutral.name} {data.neutral.count}</p>
+        <p>{data.bad.name} {data.bad.count}</p>
+        <p>All {totalcount}</p>
         <p>Average {(avg)}</p>
         <p>Positive {(percentpos)}%</p>
       </div>
@@ -57,6 +61,11 @@ const App = () => {
         count: bad,
         name: 'Bad',
         val: -1},
+      all:{
+        count: allSents.length,
+        name: 'All',
+        val: allSents
+      }
   }
   
   //Add one to the count for a given label, add value of sentiment to 
@@ -73,10 +82,7 @@ const App = () => {
       <Button handleClick={addOne(neutral, setNeutral, sentiments.neutral.val)} sent={sentiments.neutral} />
       <Button handleClick={addOne(bad, setBad, sentiments.bad.val)} sent={sentiments.bad} />
       <Header header={headers.stats} />
-      <Count sent={sentiments.good} />
-      <Count sent={sentiments.neutral}/>
-      <Count sent={sentiments.bad}/>
-      <Stats data={allSents} />
+      <Statistics data={sentiments} />
     </div>
   )
 }
