@@ -1,6 +1,17 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Header = ({header}) => <h1>{header}</h1>
+
+const Anecdote = ({selection, selectioncount}) => {
+    return (
+      <div>
+        <p>{selection}</p>
+        <p>This has {selectioncount} vote(s).</p>
+      </div>
+    )
+}
+
 const Button = ({onClick, text}) => {
   return (
     <button onClick={onClick}>
@@ -21,10 +32,12 @@ const App = ({anecdotes}) => {
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>This has {count[selected]} vote(s).</p>
+      <Header header="Anecdote of the Day" />
+      <Anecdote selection={anecdotes[selected]} selectioncount={count[selected]} />
       <Button onClick={vote(selected)} text="vote"/>
       <Button onClick={() => setSelected(Math.floor(Math.random() * 5))} text="next anecdote"/>
+      <Header header="Anecdote with the most votes" />
+      <Anecdote selection={anecdotes[count.indexOf(Math.max(...count))]} selectioncount={count[count.indexOf(Math.max(...count))]}/>
     </div>
   )
 }
