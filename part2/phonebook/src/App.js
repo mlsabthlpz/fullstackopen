@@ -4,12 +4,19 @@ import Entry from './components/Entry'
 import Button from './components/Button'
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas',
-      number: '040-1234567'}
-  ]) 
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ newFilter, setNewFilter ] = useState('')
+  const entriesToShow = newFilter === ''
+      ? persons
+      : persons.filter(person => 
+                       person.name.toLowerCase().includes(newFilter))
   
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -17,6 +24,10 @@ const App = () => {
   
   const handleNumChange = (event) => {
     setNewNumber(event.target.value)
+  }
+  
+  const handleFilterChange = (event) => {
+    setNewFilter(event.target.value)
   }
   
   const addEntry = (event) => {
@@ -36,6 +47,14 @@ const App = () => {
   return (
     <div>
       <Header header='Phonebook' />
+      <div>
+          Filter by name: 
+          <input 
+            value={newFilter}
+            onChange={handleFilterChange}
+          />
+      </div>
+      <Header header='Add New Phonebook Entry' />
       <form onSubmit={addEntry}>
         <div>
           Name: 
@@ -60,7 +79,7 @@ const App = () => {
       </form>
       <Header header='Numbers' />
       <div>
-        {persons.map(
+        {entriesToShow.map(
           person => <Entry key={person.name} entry={person} />
           )}
       </div>
