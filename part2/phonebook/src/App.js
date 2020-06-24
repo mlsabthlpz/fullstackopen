@@ -5,12 +5,18 @@ import Button from './components/Button'
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas',
+      number: '040-1234567'}
   ]) 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
   
   const handleNameChange = (event) => {
     setNewName(event.target.value)
+  }
+  
+  const handleNumChange = (event) => {
+    setNewNumber(event.target.value)
   }
   
   const addEntry = (event) => {
@@ -20,9 +26,11 @@ const App = () => {
     }
     const entryObject = {
       name: newName,
+      number: newNumber,
     }
     setPersons(persons.concat(entryObject))
     setNewName('')
+    setNewNumber('')
   }
      
   return (
@@ -34,6 +42,13 @@ const App = () => {
           <input 
             value={newName}
             onChange={handleNameChange}
+          />
+        </div>
+        <div>
+          Number: 
+          <input 
+            value={newNumber}
+            onChange={handleNumChange}
           />
         </div>
         <div>
