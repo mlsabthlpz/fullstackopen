@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import Header from './components/Header'
-import Entry from './components/Entry'
-import Button from './components/Button'
+import Filter from './components/Filter'
+import Entries from './components/Entries'
+import Form from './components/Form'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -37,7 +37,7 @@ const App = () => {
     }
     const entryObject = {
       name: newName,
-      number: newNumber,
+      number: newNumber
     }
     setPersons(persons.concat(entryObject))
     setNewName('')
@@ -46,43 +46,24 @@ const App = () => {
      
   return (
     <div>
-      <Header header='Phonebook' />
-      <div>
-          Filter by name: 
-          <input 
-            value={newFilter}
-            onChange={handleFilterChange}
-          />
-      </div>
-      <Header header='Add New Phonebook Entry' />
-      <form onSubmit={addEntry}>
-        <div>
-          Name: 
-          <input 
-            value={newName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          Number: 
-          <input 
-            value={newNumber}
-            onChange={handleNumChange}
-          />
-        </div>
-        <div>
-          <Button
-            type='submit'
-            text='Add'
-            />
-        </div>
-      </form>
-      <Header header='Numbers' />
-      <div>
-        {entriesToShow.map(
-          person => <Entry key={person.name} entry={person} />
-          )}
-      </div>
+      <h2>Phonebook</h2>
+      <Filter 
+        filterText='Filter by' 
+        filterVal={newFilter} 
+        filterChange={handleFilterChange}
+      />
+      <h3>Add New Phonebook Entry</h3>
+      <Form
+        onSubmit={addEntry}
+        nameText='Name'  
+        nameVal={newName}
+        nameChange={handleNameChange}
+        numText='Number' 
+        numVal={newNumber}
+        numChange={handleNumChange}
+      />
+      <h3>Numbers</h3>
+      <Entries entries={entriesToShow} />
     </div>
   )
 }
