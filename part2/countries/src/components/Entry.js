@@ -1,9 +1,13 @@
 import React from 'react'
+import Button from './Button'
 
-const Entry = ({ entry }) => {
+const Entry = ({ entry, onClick }) => {
   return (
     <div>
-      {entry.name}
+      {entry.name} <Button type='button' 
+                           name={entry.name}
+                           onClick={onClick} 
+                           text='show' />
     </div>
   )
 }

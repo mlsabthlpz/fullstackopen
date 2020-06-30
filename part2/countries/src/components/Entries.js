@@ -2,7 +2,7 @@ import React from 'react'
 import Entry from './Entry'
 import CountryDetails from './CountryDetails'
 
-const Entries = ({ entries }) => {
+const Entries = ({ entries, onClick }) => {
   const numMatches = entries.length
   switch(true) {
     case (numMatches > 10):
@@ -14,10 +14,11 @@ const Entries = ({ entries }) => {
       return (
         <div>
           {entries.map(
-            country => <Entry key={country.name} entry={country} />)}
+            country => <Entry key={country.name} 
+                              entry={country} 
+                              onClick={onClick} />)}
         </div>
-      )  
-  }
+      )} 
 }
 
 export default Entries

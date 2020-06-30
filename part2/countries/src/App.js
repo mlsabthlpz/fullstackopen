@@ -6,18 +6,16 @@ import Entries from './components/Entries'
 function App() {
   const [ countries, setCountries ] = useState([])
   const [ newFilter, setNewFilter ] = useState('')
+  const [ selected, setSelected ] = useState('')
   const entriesToShow = newFilter === ''
       ? countries
       : countries.filter(country => 
                        country.name.toLowerCase().includes(newFilter))
 
-
   const hook = () => {
-    console.log('effect')
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
-        console.log('promise fulfilled')
         setCountries(response.data)
       })
   }
@@ -25,8 +23,15 @@ function App() {
   useEffect(hook, [])
 
   const handleFilterChange = (event) => {
+    setSelected('')
     setNewFilter(event.target.value)
   }
+  
+  const handleShowButton = (event) => {
+    const clickedCountry = countries.find(
+      country => country.name === event.target.name)
+    setSelected([clickedCountry])
+    }
   
   return (
     <div>
@@ -35,7 +40,8 @@ function App() {
         value={newFilter} 
         onChange={handleFilterChange} 
       />
-      <Entries entries={entriesToShow} />
+      <Entries entries={selected ? selected : entriesToShow} 
+               onClick={handleShowButton}  />
     </div>
   );
 }
