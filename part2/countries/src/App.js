@@ -12,15 +12,14 @@ function App() {
       : countries.filter(country => 
                        country.name.toLowerCase().includes(newFilter))
 
-  const hook = () => {
+  const countryhook = () => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
         setCountries(response.data)
       })
   }
-
-  useEffect(hook, [])
+  useEffect(countryhook, [])
 
   const handleFilterChange = (event) => {
     setSelected('')
@@ -41,7 +40,8 @@ function App() {
         onChange={handleFilterChange} 
       />
       <Entries entries={selected ? selected : entriesToShow} 
-               onClick={handleShowButton}  />
+               onClick={handleShowButton}  
+      />
     </div>
   );
 }
