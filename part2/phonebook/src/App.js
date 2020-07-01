@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Entries from './components/Entries'
 import Form from './components/Form'
-import noteService from './services/persons'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -14,9 +14,9 @@ const App = () => {
       : persons.filter(person => 
                        person.name.toLowerCase().includes(newFilter))
   
-  /* Get inital phonebook entries from JSON server */
+  /* Get initial phonebook entries from JSON server */
   useEffect(() => {
-    noteService
+    personService
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
@@ -34,13 +34,20 @@ const App = () => {
       number: newNumber
     }
   
-    noteService
+    personService
       .create(entryObject)
       .then(newEntry => {
         setPersons(persons.concat(newEntry))
         setNewName('')
         setNewNumber('')
       })
+  }
+
+  /* Delete note upon button press */
+  const deleteButton = (event) => {
+    const id = event.target.id
+    personService.deleteEntry(id)
+    personService.getAll().then(updated => setPersons(updated))
   }
 
   /* Update state of phonebook entry and filter inputs */
@@ -75,7 +82,7 @@ const App = () => {
         numChange={handleNumChange}
       />
       <h3>Numbers</h3>
-      <Entries entries={entriesToShow} />
+      <Entries entries={entriesToShow} deleteClick={deleteButton} />
     </div>
   )
 }
