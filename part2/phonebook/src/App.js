@@ -46,8 +46,11 @@ const App = () => {
   /* Delete note upon button press */
   const deleteButton = (event) => {
     const id = event.target.id
-    personService.deleteEntry(id)
-    personService.getAll().then(updated => setPersons(updated))
+    const deletePerson = persons.filter(person => person.id === Number(id))[0]
+    if (window.confirm(`Delete ${deletePerson.name}?`)) {
+      personService.deleteEntry(id)
+      setPersons(persons.filter(person => person.id !== Number(id)))
+    }
   }
 
   /* Update state of phonebook entry and filter inputs */
