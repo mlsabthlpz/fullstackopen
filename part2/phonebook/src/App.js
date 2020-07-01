@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Entries from './components/Entries'
 import Form from './components/Form'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([])
+  const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
-  const entriesToShow = newFilter === ''
-      ? persons
-      : persons.filter(person => 
-                       person.name.toLowerCase().includes(newFilter))
+  const [ notification, setNotification ] = useState(null)
   
   /* Get initial phonebook entries from JSON server */
   useEffect(() => {
@@ -40,6 +38,8 @@ const App = () => {
                           : response ))
               setNewName('')
               setNewNumber('')
+              setNotification(`Updated number for ${existingPerson.name}`)
+              setTimeout(() => {setNotification(null)}, 5000)
             })
         }
     }
@@ -55,6 +55,8 @@ const App = () => {
           setPersons(persons.concat(newEntry))
           setNewName('')
           setNewNumber('')
+          setNotification(`Added ${newEntry.name} to phonebook`)
+          setTimeout(() => {setNotification(null)}, 5000)
         })
       }
   }
@@ -66,8 +68,16 @@ const App = () => {
     if (window.confirm(`Delete ${deletePerson.name}?`)) {
       personService.deleteEntry(id)
       setPersons(persons.filter(person => person.id !== Number(id)))
+      setNotification(`Removed ${deletePerson.name} from phonebook`)
+      setTimeout(() => {setNotification(null)}, 5000)
     }
   }
+
+  /* Filter definition for filter input */
+  const entriesToShow = newFilter === ''
+  ? persons
+  : persons.filter(person => 
+                   person.name.toLowerCase().includes(newFilter))
 
   /* Update state of phonebook entry and filter inputs */
   const handleNameChange = (event) => {
@@ -85,6 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter 
         filterText='Filter by' 
         filterVal={newFilter} 
