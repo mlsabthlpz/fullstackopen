@@ -26,21 +26,37 @@ const App = () => {
   /* Add entry to JSON upon form submission and update browser view */
   const addEntry = (event) => {
     event.preventDefault()
-    if (persons.map(person => person.name).includes(newName)) {
-        return window.alert(`${newName} is already in this phonebook!`)
+    const nameExists = persons.map(person => person.name).includes(newName)
+    if (nameExists) {
+        if (window.confirm(`${newName} is already in this phonebook! Replace number with a new one?`)) {
+          const existingPerson = persons.filter(person => person.name === newName)[0]
+          const updateNumber = {...existingPerson, number: newNumber}
+          personService
+            .update(existingPerson.id, updateNumber)
+            .then(response => {
+              setPersons(persons.map(person => 
+                          person.id !== existingPerson.id 
+                          ? person 
+                          : response ))
+              setNewName('')
+              setNewNumber('')
+            })
+        }
     }
-    const entryObject = {
-      name: newName,
-      number: newNumber
-    }
-  
-    personService
-      .create(entryObject)
-      .then(newEntry => {
-        setPersons(persons.concat(newEntry))
-        setNewName('')
-        setNewNumber('')
-      })
+    else {
+      const entryObject = {
+        name: newName,
+        number: newNumber
+      }
+    
+      personService
+        .create(entryObject)
+        .then(newEntry => {
+          setPersons(persons.concat(newEntry))
+          setNewName('')
+          setNewNumber('')
+        })
+      }
   }
 
   /* Delete note upon button press */
