@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import Entries from './components/Entries'
 import Form from './components/Form'
+import noteService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -14,18 +14,36 @@ const App = () => {
       : persons.filter(person => 
                        person.name.toLowerCase().includes(newFilter))
   
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  /* Get inital phonebook entries from JSON server */
+  useEffect(() => {
+    noteService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+    }, [])
+
+  /* Add entry to JSON upon form submission and update browser view */
+  const addEntry = (event) => {
+    event.preventDefault()
+    if (persons.map(person => person.name).includes(newName)) {
+        return window.alert(`${newName} is already in this phonebook!`)
+    }
+    const entryObject = {
+      name: newName,
+      number: newNumber
+    }
+  
+    noteService
+      .create(entryObject)
+      .then(newEntry => {
+        setPersons(persons.concat(newEntry))
+        setNewName('')
+        setNewNumber('')
       })
   }
 
-useEffect(hook, [])
-
+  /* Update state of phonebook entry and filter inputs */
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -36,20 +54,6 @@ useEffect(hook, [])
   
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value)
-  }
-  
-  const addEntry = (event) => {
-    event.preventDefault()
-    if (persons.map(person => person.name).includes(newName)) {
-        return window.alert(`${newName} is already in this phonebook!`)
-    }
-    const entryObject = {
-      name: newName,
-      number: newNumber
-    }
-    setPersons(persons.concat(entryObject))
-    setNewName('')
-    setNewNumber('')
   }
      
   return (
