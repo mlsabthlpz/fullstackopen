@@ -10,7 +10,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
-  const [ notification, setNotification ] = useState(null)
+  const [ notification, setNotification ] = useState({message: null, class:'notify'})
   
   /* Get initial phonebook entries from JSON server */
   useEffect(() => {
@@ -38,8 +38,8 @@ const App = () => {
                           : response ))
               setNewName('')
               setNewNumber('')
-              setNotification(`Updated number for ${existingPerson.name}`)
-              setTimeout(() => {setNotification(null)}, 5000)
+              setNotification({message:`Updated number for ${existingPerson.name}`, class:'notify'})
+              setTimeout(() => {setNotification({...notification, message:null})}, 5000)
             })
         }
     }
@@ -55,8 +55,8 @@ const App = () => {
           setPersons(persons.concat(newEntry))
           setNewName('')
           setNewNumber('')
-          setNotification(`Added ${newEntry.name} to phonebook`)
-          setTimeout(() => {setNotification(null)}, 5000)
+          setNotification({message:`Added ${newEntry.name} to phonebook`, class:'notify'})
+          setTimeout(() => {setNotification({...notification, message:null})}, 5000)
         })
       }
   }
@@ -66,10 +66,15 @@ const App = () => {
     const id = event.target.id
     const deletePerson = persons.filter(person => person.id === Number(id))[0]
     if (window.confirm(`Delete ${deletePerson.name}?`)) {
-      personService.deleteEntry(id)
+      personService
+        .deleteEntry(id)
+        .catch(error => {
+          setNotification({message:`${deletePerson.name} was already deleted from the server.`, 
+                           class:'notify notify-error'})
+        })
       setPersons(persons.filter(person => person.id !== Number(id)))
-      setNotification(`Removed ${deletePerson.name} from phonebook`)
-      setTimeout(() => {setNotification(null)}, 5000)
+      setNotification({message:`Removed ${deletePerson.name} from phonebook`, class:'notify'})
+      setTimeout(() => {setNotification({...notification, message:null})}, 5000)
     }
   }
 
@@ -95,7 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification message={notification.message} className={notification.class} />
       <Filter 
         filterText='Filter by' 
         filterVal={newFilter} 
